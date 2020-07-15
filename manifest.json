@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+
+  "name": "Secure headers check",
+  "description": "Secure headers check and log",
+  "version": "1.0",
+
+  "permissions": [
+    "webRequest",
+    // "http://localhost/*"
+    "*://*/*"
+  ],
+
+  "browser_action": {
+    "default_title": "Secure headers check"
+  },
+
+  "background": {
+    "scripts": [
+      "assets/js/main.js"
+    ],
+    "persistent": true
+  },
+
+  "options_page": "options.html"
+}
