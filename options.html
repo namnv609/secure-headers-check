@@ -2,50 +2,106 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Secure Headers Check</title>
-  <style type="text/css">
+  <link rel="stylesheet" type="text/css" href="assets/css/pure-min.css">
+  <style>
     table {
       table-layout: fixed;
+      width: 100%;
     }
     .text-ellipsis {
-      overflow: hidden;
+      overflow: hidden !important;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    input[type="text"] {
-      width: 99.5%;
+    .red-color {
+      color: #F00;
+    }
+    .green-color {
+      color: #080;
+    }
+    .bold {
+      font-weight: bold;
+    }
+    .copyright {
+      text-align: center;
+    }
+    .copyright a {
+      color: #00F;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <div>
-      <p>
-        <span>Tên header (phân cách bằng dấu phảy):</span>
-        <br />
-        <input type="text" id="header-names" placeholder="Content-type, cache-control, accept-encoding">
-      </p>
-      <p>
-        <button id="start-record">
-          Start record
-        </button>
-      </p>
+  <div class="pure-g">
+    <div class="pure-u-1">
+      <form class="pure-form pure-form-aligned">
+        <fieldset>
+          <div class="pure-control-group">
+            <label for="header-names">
+              Header names
+            </label>
+            <input type="text" id="header-names" class="pure-input-1-2" placeholder="Vary, Expires, Content-Type, Last-Modified">
+            <span class="pure-form-message-inline">
+              Separate by comma
+            </span>
+          </div>
+          <div class="pure-control-group">
+            <label for="request-types">Request types</label>
+            <select id="request-types" multiple="multiple" size="13">
+              <option value="main_frame" selected="selected">Main frame</option>
+              <option value="sub_frame" selected="selected">Sub frame</option>
+              <option value="stylesheet">Stylesheet</option>
+              <option value="script">Script</option>
+              <option value="image">Image</option>
+              <option value="font">Font</option>
+              <option value="object">Object</option>
+              <option value="xmlhttprequest" selected="selected">XML HTTP Request (AJAX)</option>
+              <option value="ping">Ping</option>
+              <option value="csp_report">CSP report</option>
+              <option value="media">Media</option>
+              <option value="websocket">Websocket</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="pure-control-group">
+            <label>&nbsp;</label>
+            <button class="pure-button pure-button-primary" type="button" id="start-record">
+              Start record
+            </button>
+          </div>
+        </fieldset>
+      </form>
     </div>
-    <div>
-      <table border="1" width="100%">
+    <div class="pure-u-1">
+      <table class="pure-table pure-table-bordered">
         <thead>
           <tr>
             <th>URL</th>
             <th>Method</th>
-            <th>Status</th>
+            <th>Status code</th>
             <th>Request type</th>
             <th>Headers</th>
+            <th>Status</th>
           </tr>
         </thead>
-        <tbody id="result"></tbody>
+        <tbody id="request-result">
+        </tbody>
       </table>
     </div>
+    <div class="pure-u-1 copyright">
+      <p>
+        Copyright &copy;2020 by <a href="https://github.com/namnv609" target="_blank">NamNV609</a><br />
+        All rights reserved<br />
+      </p>
+      <div>
+        Icons made by
+        <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons" target="_blank">Smashicons</a>
+        from <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">www.flaticon.com</a>
+      </div>
+    </div>
   </div>
-  <script type="text/javascript" src="assets/js/options.js"></script>
+
+  <script type="text/javascript" src="assets/js/options-page.js"></script>
 </body>
 </html>

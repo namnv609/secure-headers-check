@@ -1,4 +1,4 @@
-var portConnect;
+var messageConnection;
 
 chrome.browserAction.onClicked.addListener(function(evt) {
   chrome.runtime.openOptionsPage();
@@ -6,31 +6,31 @@ chrome.browserAction.onClicked.addListener(function(evt) {
 
 chrome.runtime.onConnect.addListener(onMessageConnectHandler);
 
-function onHeadersReceivedHandler(requestDetail) {
-  if (["main_frame", "sub_frame", "xmlhttprequest"].indexOf(requestDetail.type) >= 0) {
-    portConnect.postMessage({content: requestDetail});
-  }
-}
 
-function onPortMessageHandler(msg) {
-  if (msg.isRecordRequest) {
-    chrome.webRequest.onHeadersReceived.addListener(onHeadersReceivedHandler, {
-      urls: ["<all_urls>"]
-    }, ["responseHeaders"]);
-  } else {
-    chrome.webRequest.onHeadersReceived.removeListener(onHeadersReceivedHandler);
-  }
-}
+function onMessageConnectHandler(connectionObj) {
+  messageConnection = connectionObj;
 
-function onMessageConnectHandler(port) {
-  portConnect = port;
+  if (messageConnection.name == "SecureHeadersCheck") {
+    messageConnection.onMessage.addListener(onReceivedMessageHandler);
 
-
-  if (portConnect.name == "SecureHeadersCheck") {
-    portConnect.onMessage.addListener(onPortMessageHandler);
-    portConnect.onDisconnect.addListener(function(port) {
-      portConnect.onMessage.removeListener(onPortMessageHandler);
-      chrome.webRequest.onHeadersReceived.removeListener(onHeadersReceivedHandler);
+    messageConnection.onDisconnect.addListener(function() {
+      messageConnection.onMessage.removeListener(onReceivedMessageHandler);
+      chrome.webRequest.onHeadersReceived.removeListener(onReceivedHeadersHandler);
     });
   }
+}
+
+function onReceivedMessageHandler(message) {
+  if (message.isStart) {
+    chrome.webRequest.onHeadersReceived.addListener(onReceivedHeadersHandler, {
+      urls: ["<all_urls>"],
+      types: message.requestTypes
+    }, ["responseHeaders"]);
+  } else {
+    chrome.webRequest.onHeadersReceived.removeListener(onReceivedHeadersHandler);
+  }
+}
+
+function onReceivedHeadersHandler(requestDetail) {
+  messageConnection.postMessage({requestDetail: requestDetail});
 }
